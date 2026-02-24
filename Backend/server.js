@@ -18,7 +18,12 @@ app.get('/', (req,res)=>{
     res.send("hello world");
 })
 
-
+app.post('/upload-data', (req, res) =>{
+    const name = req.body.name;  
+    const date = req.body.date;
+    res.status(200).send(`${name} ${date}`)
+    console.log(name, date);
+})
 
 app.listen(PORT, () => {
     console.log("Server is Running on PORT: " + PORT);
