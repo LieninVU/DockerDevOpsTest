@@ -18,11 +18,21 @@ app.get('/', (req,res)=>{
     res.send("hello world");
 })
 
-app.post('/upload-data', (req, res) =>{
-    const name = req.body.name;  
-    const date = req.body.date;
+app.post('/api/auth', (req, res) =>{
+    const email = req.body.email;  
+    const password = req.body.password;
     res.status(200).send(`${name} ${date}`)
     console.log(name, date);
+})
+
+app.post('/api/registration', (req, res) => {
+    const name = req.body.name;
+    const surname = req.body.surname;
+    const fathername = req.body.fathername;
+    const date = req.body.date;
+    const email = req.body.email;
+    const password = req.body.password;
+
 })
 
 app.listen(PORT, () => {

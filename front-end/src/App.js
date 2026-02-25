@@ -3,7 +3,8 @@ import ReactDOM from "react-dom/client";
 import { useState, useEffect } from "react";
 import {useNavigate} from "react-router-dom";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
-import Form from "./components/form"
+import Auth from "./components/Auth";
+import Register from "./components/Registration";
 
 
 const AppContext = ({SERVER}) => {
@@ -33,8 +34,11 @@ const AppContext = ({SERVER}) => {
                     <button onClick={handleNavigateToDate}>SEND DATA</button>
                 </div>
             }/>
-            <Route path="/form" element={
-                <Form/>
+            <Route path="/auth" element={
+                <Auth/>
+            }/>
+            <Route path="register" element={
+                <Register/>
             }/>
         </Routes>   
     )
