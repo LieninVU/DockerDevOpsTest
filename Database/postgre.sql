@@ -1,19 +1,23 @@
--- Создание таблицы
+CREATE TYPE user_role AS ENUM ('admin', 'user');
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    full_name VARCHAR(255) NOT NULL,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    father_name VARCHAR(255) NOT NULL,
     birth_date DATE,
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
-    role ENUM('admin', 'user') DEFAULT 'user',
-    is_active BOOLEAN DEFAULT TRUE,
+    role user_role DEFAULT 'user',
+    is_active BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Добавление администратора с хэшированным паролем
-INSERT INTO users (full_name, email, password_hash, role, is_active)
+INSERT INTO users (first_name, last_name, father_name, email, password_hash, role, is_active)
 VALUES (
+    'Admin',
+    'Admin',
     'Admin',
     'admin@mail.com',
     -- Здесь должен быть реальный хеш пароля, например, от bcrypt

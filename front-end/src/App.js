@@ -22,22 +22,27 @@ const AppContext = ({SERVER}) => {
 
     const handleNavigateToDate = () => {
         navigate("/form", {replace: true});
-
     };
+    const handleNavigateToRegistration = () => {
+        navigate("/registration")
+    }
+    const handleNavigateToAuthorization = () => {
+        navigate("/authorization")
+    }
 
     return(
         <Routes>
             <Route path="/" element={
                 <div>
                     {data}
-                    <button>GET DATA</button>
-                    <button onClick={handleNavigateToDate}>SEND DATA</button>
+                    <button onClick={handleNavigateToAuthorization}>AUTHORIZATION</button>
+                    <button onClick={handleNavigateToRegistration}>REGISTRATION</button>
                 </div>
             }/>
-            <Route path="/auth" element={
+            <Route path="/authorization" element={
                 <Auth/>
             }/>
-            <Route path="register" element={
+            <Route path="/registration" element={
                 <Register/>
             }/>
         </Routes>   

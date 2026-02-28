@@ -3,11 +3,11 @@ import { useState } from "react";
 
 
 function Registration (){
-    const SERVER = process.env.SERVER || "http://localhost:2000"; 
+    const SERVER = process.env.SERVER || "http://localhost:2000";
     const [name, setName] = useState("");
     const [surname, setSurname] = useState("");
     const [fatherName, setFatherName] = useState("");
-    const [date, setDate] = useState(Date.now());
+    const [date, setDate] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isAdmin, setAdmin] = useState(false);
@@ -25,11 +25,11 @@ function Registration (){
     
     const handleSubmit = async (e) =>{
         e.preventDefault();
-        const reasponse = await fetch(`${SERVER}/api/registration`,{
+        const response = await fetch(`${SERVER}/api/registration`,{
             method: "POST",
             credentials: "include",
             headers: {"Content-Type": "application/json"},
-            bosy: JSON.stringify({name: name, surname: surname, fathername: fatherName, date: date, email: email, password: password})
+            body: JSON.stringify({name: name, surname: surname, fathername: fatherName, date: date, email: email, password: password})
         })
         if(!response.ok){ console.log(`We having a problem\nStats: ${response.status}\nError: ${response.text()}`); alert("Error, you Dont Registrate Account");}
 
