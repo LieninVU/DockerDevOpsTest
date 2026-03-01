@@ -13,15 +13,25 @@ CREATE TABLE users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Добавление администратора с хэшированным паролем
+
 INSERT INTO users (first_name, last_name, father_name, email, password_hash, role, is_active)
 VALUES (
     'Admin',
     'Admin',
     'Admin',
     'admin@mail.com',
-    -- Здесь должен быть реальный хеш пароля, например, от bcrypt
-    '$2b$10$6q9z5v7u8i0o9p0l1k2j3h4g5f6d7s8a9z0x1c2v3b4n5m6', -- пример хеша
+
+    '$2b$10$6q9z5v7u8i0o9p0l1k2j3h4g5f6d7s8a9z0x1c2v3b4n5m6', 
     'admin',
     TRUE
 );
+
+CREATE TABLE session (
+    sid VARCHAR NOT NULL,                    
+    sess JSON NOT NULL,                      
+    expire TIMESTAMP(6) WITH TIME ZONE NOT NULL 
+);
+
+
+ALTER TABLE session ADD CONSTRAINT session_pkey PRIMARY KEY (sid);
+CREATE INDEX IDX_session_expire ON session(expire);

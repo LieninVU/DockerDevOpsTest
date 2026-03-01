@@ -1,11 +1,13 @@
 import React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Auth (){
     const SERVER = process.env.SERVER || "http://localhost:2000";
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
+    const navigate = useNavigate();
+    
     const handleSetEmail = (e) => {setEmail(e.target.value);}
     const handleSetPassword = (e) => {setPassword(e.target.value);}
 
@@ -18,8 +20,11 @@ function Auth (){
             body: JSON.stringify({email: email, password: password })
         });
         if (!response.ok){ const error = await response.text(); console.log(`We having a problem\nStats: ${response.status}\nError: ${error}`);}
-        else{ alert("Authorization successful"); console.log("Authorization successful");}
-
+        else{ 
+            alert("Authorization successful"); 
+            console.log("Authorization successful");
+            navigate("/");
+        }
     }
 
     return(
