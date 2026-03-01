@@ -47,12 +47,17 @@ app.get('/', (req,res)=>{
     res.send("hello world");
 })
 
-app.post('/api/auth', (req, res) =>{
+app.post('/api/auth', async (req, res) =>{
     const email = req.body.email;  
     const password = req.body.password;
-    // await query;
-    res.status(200).send(`${email} ${password}`)
-    console.log(email, password);
+    const sql = `SELECT * FROM users WHERE email = $1 AND password_hash = $2`;
+    try{
+        const response = await query(sql, [email, password]);
+        if(response.rowCount === 1){ return res.status(200).json({success:true});}
+    } catch (error){
+        console.error(error);
+        return res.status(500).json({success: false, message: `User is not found or You Input wrong data\n${error.message}`})
+    }
 })
 
 app.post('/api/registration', async(req, res) => {
