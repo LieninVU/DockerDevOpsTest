@@ -29,6 +29,17 @@ const AppContext = ({SERVER}) => {
     const handleNavigateToAuthorization = () => {
         navigate("/authorization")
     }
+    const handleLogOut = async() => {
+        const response = await fetch(`${SERVER}/api.logout`, {
+            method: "GET",
+            credentials: "include"
+        })
+        if(!response.ok){const error = await response.text(); console.log(`We having a problem\nStats: ${response.status}\nError: ${error}`)}
+        else{
+            const result = await response.json();
+            if(result.success){alert("You are LogOut"); console,log("user logout")}
+        }
+    }
 
     return(
         <Routes>
@@ -37,6 +48,8 @@ const AppContext = ({SERVER}) => {
                     {data}
                     <button onClick={handleNavigateToAuthorization}>AUTHORIZATION</button>
                     <button onClick={handleNavigateToRegistration}>REGISTRATION</button>
+                    <button onClick={handleLogOut}>LOGOUT</button>
+
                 </div>
             }/>
             <Route path="/authorization" element={

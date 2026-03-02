@@ -21,7 +21,7 @@ VALUES (
     'Admin',
     'admin@mail.com',
 
-    '$2b$10$6q9z5v7u8i0o9p0l1k2j3h4g5f6d7s8a9z0x1c2v3b4n5m6', 
+    'admin', 
     'admin',
     TRUE
 );
