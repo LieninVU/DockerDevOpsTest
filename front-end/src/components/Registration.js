@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../AuthContext";
 
 function Registration (){
     const SERVER = process.env.SERVER || "http://localhost:2000";
@@ -13,6 +14,7 @@ function Registration (){
     const [isAdmin, setAdmin] = useState(false);
     const [isActive, setActive] = useState(false);
     const navigate = useNavigate();
+    const { checkContext } = useAuth();
 
     const handleSetName = (e) => {setName(e.target.value);}
     const handleSetSurname = (e) => {setSurname(e.target.value);}
@@ -32,7 +34,7 @@ function Registration (){
             body: JSON.stringify({name: name, surname: surname, fathername: fatherName, date: date, email: email, password: password})
         })
         if(!response.ok){ console.log(`We having a problem\nStats: ${response.status}\nError: ${response.text()}`); alert("Error, you Dont Registrate Account");}
-        else{ alert("Registration successful"); console.log("Registration successful"); navigate("/");}
+        else{ alert("Registration successful"); console.log("Registration successful"); await checkContext(); navigate("/");}
     }
 
 

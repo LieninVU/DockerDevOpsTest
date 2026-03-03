@@ -119,6 +119,31 @@ app.post('/api/logout', async(req, res) => {
     })
 })
 
+const isAuthenticated = (req, res, next) => {
+    if(!req.session.id || !req.session.isAdmin){
+        return res.status(401).json({success: false, message: "Unathorized, Please Log In"})
+    }
+    if(req.session.cookie.expires && req.session.cookie.expires < Date.now()){
+        req.session.destroy(err => {
+        if(err){
+            console.log("LogOut Error: ", err.message);
+            return res.status(500).json({success: false, message: err.message})
+        }
+        res.clearCookie("connection.sid");
+        return res.status(401).json({success: false, message: "Your Session Term is Finish"});
+    })
+    }
+    const sessionTime = 1000 * 60;
+    req.session.cookie.maxAge = sessionTime;
+    req.session.cookie.expires = new Date(Date.now() + sessionTime);
+    return next();
+}
+
+
+app.get('/api/check-authenticated', isAuthenticated, (req, res) => {
+    return res.status(200).json({isAuthenticated: true, success: true});
+})
+
 app.listen(PORT, () => {
     console.log("Server is Running on PORT: " + PORT);
 })

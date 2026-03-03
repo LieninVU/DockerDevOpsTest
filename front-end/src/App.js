@@ -9,7 +9,6 @@ import {AuthProvider, useAuth} from "./AuthContext";
 import Main from "./components/Main";
 
 const App = ({SERVER}) => {
-    
     return(
         <AuthProvider>
             <BrowserRouter>

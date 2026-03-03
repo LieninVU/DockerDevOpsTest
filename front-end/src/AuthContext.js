@@ -21,7 +21,7 @@ function AuthProvider({children}){
     }, [])
 
 
-    const checkContext = async () =>{
+    async function checkContext(){
         const response = await fetch(`${SERVER}/api/check-authenticated`, {
             method: "GET",
             credentials: "include"
@@ -47,7 +47,7 @@ function AuthProvider({children}){
     )
 }
 
-export default AuthProvider;
+export {AuthProvider};
 export const useAuth = () => {
     const context = useContext(AuthContext);
     if(!context){throw new Error("Error with Auth Context");}
