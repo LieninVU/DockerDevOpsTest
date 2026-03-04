@@ -120,7 +120,7 @@ app.post('/api/logout', async(req, res) => {
 })
 
 const isAuthenticated = (req, res, next) => {
-    if(!req.session.id || !req.session.isAdmin){
+    if(!req.session.id){
         return res.status(401).json({success: false, message: "Unathorized, Please Log In"})
     }
     if(req.session.cookie.expires && req.session.cookie.expires < Date.now()){
@@ -140,8 +140,12 @@ const isAuthenticated = (req, res, next) => {
 }
 
 
-app.get('/api/check-authenticated', isAuthenticated, (req, res) => {
-    return res.status(200).json({isAuthenticated: true, success: true});
+app.get('/api/check-authenticated', isAuthenticated, async(req, res) => {
+    const sql = `SELECT * FROM users WHERE id = $1`;
+    const id = req.session.id;
+    const response = await query(sql, [id]);
+    const result = await response.rows[0];
+    return res.status(200).json({isAuthenticated: true, success: true, body: result});
 })
 
 app.listen(PORT, () => {

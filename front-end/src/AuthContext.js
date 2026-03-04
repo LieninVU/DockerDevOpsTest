@@ -30,18 +30,19 @@ function AuthProvider({children}){
         else{
             const result = await response.json();
             if(result.success){
-                setName(result.name);
-                setSurname(result.surname);
-                setFatherName(result.father_name);
-                setDate(result.date);
-                setEmail(result.email);
-                setAdmin(result.role==='admin');
-                setActive(result.is_active);
+                setName(result.body.first_name);
+                setSurname(result.body.last_name);
+                setFatherName(result.body.father_name);
+                setDate(result.body.birth_date);
+                setEmail(result.body.email);
+                setAdmin(result.body.role==='admin');
+                setActive(result.body.is_active);
+                setAuthenticated(true); 
             }
         }
     }
     return(
-        <AuthContext.Provider value={{isAuthenticated, setAuthenticated, name, setName, surname, setSurname, fatherName, setFatherName, date, setDate, email, setEmail, isAdmin, setAdmin, isActive, setActive}}>
+        <AuthContext.Provider value={{checkContext, isAuthenticated, setAuthenticated, name, setName, surname, setSurname, fatherName, setFatherName, date, setDate, email, setEmail, isAdmin, setAdmin, isActive, setActive}}>
             {children}
         </AuthContext.Provider>
     )
