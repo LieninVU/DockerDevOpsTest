@@ -2,7 +2,7 @@ import {useState, useEffect, createContext, useContext } from "react";
 const AuthContext = createContext(null);
 
 function AuthProvider({children}){
-    const SERVER = process.env.SERVER || "http://localhost:2000";
+    const SERVER = process.env.REACT_APP_SERVER || "http://localhost:2000";
     const [isAuthenticated, setAuthenticated] = useState(false);
     const [name, setName] = useState("");
     const [surname, setSurname] = useState("");

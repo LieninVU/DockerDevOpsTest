@@ -8,7 +8,9 @@ const Main = ({SERVER}) => {
     const navigate = useNavigate()
     const [data, setData] = useState('null');
     const {isAuthenticated, checkContext} = useAuth();
+    
     useEffect(() => {
+        checkContext();
         fetch(`${SERVER}/`, { credentials: "include"}).then(
             res => res.text()
         ).then(data => {
@@ -23,9 +25,11 @@ const Main = ({SERVER}) => {
     };
     const handleNavigateToRegistration = () => {
         navigate("/registration")
+        checkContext();
     }
     const handleNavigateToAuthorization = () => {
         navigate("/authorization")
+        checkContext();
     }
     const handleLogUot = async() => {
         const response = await fetch(`${SERVER}/api/logout`, {

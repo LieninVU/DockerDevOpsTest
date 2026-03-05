@@ -74,7 +74,7 @@ app.post('/api/auth', async (req, res) =>{
         const response = await query(sql, [email, password]);
         if(response.rowCount === 1){ 
             const user = await response.rows[0];
-            req.session.id = user.id;
+            req.session.userId = user.id;
             req.session.isAdmin = user.role === 'admin';
             return res.status(200).json({success:true});
         }
@@ -97,7 +97,7 @@ app.post('/api/registration', async(req, res) => {
     const results = await query(sql, [name, surname, fathername, date, email, password]);    
         if (results.rowCount === 1){
             const user = await results.rows[0];
-            req.session.id = user.id;
+            req.session.userId = user.id;
             req.session.isAdmin = user.role === 'admin';
             return res.status(200).json({success: true})
         }
@@ -120,7 +120,7 @@ app.post('/api/logout', async(req, res) => {
 })
 
 const isAuthenticated = (req, res, next) => {
-    if(!req.session.id){
+    if(!req.session.userId){
         return res.status(401).json({success: false, message: "Unathorized, Please Log In"})
     }
     if(req.session.cookie.expires && req.session.cookie.expires < Date.now()){
@@ -142,7 +142,7 @@ const isAuthenticated = (req, res, next) => {
 
 app.get('/api/check-authenticated', isAuthenticated, async(req, res) => {
     const sql = `SELECT * FROM users WHERE id = $1`;
-    const id = req.session.id;
+    const id = req.session.userId;
     const response = await query(sql, [id]);
     const result = await response.rows[0];
     return res.status(200).json({isAuthenticated: true, success: true, body: result});

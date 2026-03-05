@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 
 function Auth (){
-    const SERVER = process.env.SERVER || "http://localhost:2000";
+    const SERVER = process.env.REACT_APP_SERVER || "http://localhost:2000";
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
@@ -22,10 +22,11 @@ function Auth (){
             body: JSON.stringify({email: email, password: password })
         });
         if (!response.ok){ const error = await response.text(); console.log(`We having a problem\nStats: ${response.status}\nError: ${error}`);}
-        else{ 
-            alert("Authorization successful"); 
+        else{
+            alert("Authorization successful");
             console.log("Authorization successful");
             await checkContext();
+            console.log("checkContext completed, navigating to /");
             navigate("/");
         }
     }

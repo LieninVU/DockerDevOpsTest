@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 
 function Registration (){
-    const SERVER = process.env.SERVER || "http://localhost:2000";
+    const SERVER = process.env.REACT_APP_SERVER || "http://localhost:2000";
     const [name, setName] = useState("");
     const [surname, setSurname] = useState("");
     const [fatherName, setFatherName] = useState("");
