@@ -29,7 +29,9 @@ pool.on('error',(err) => {
 async function query(sql, params){
     const connection = await pool.connect();
     try{
-        const results = await connection.query(sql, params);
+        const results = params && params.length > 0 ? 
+        await connection.query(sql, params) :
+        await connection.query(sql);
         return results;
     } catch (err){
         console.log("Error executing of query: " + err);
@@ -56,7 +58,7 @@ app.use(session({
     cookie: {
         httpOnly: true,
         secure: false,
-        maxAge: 1000 * 60,
+        maxAge: 1000 * 60 * 10,
         sameSite: 'lax'
     }
 }))
@@ -119,6 +121,16 @@ app.post('/api/logout', async(req, res) => {
     })
 })
 
+const isAdmin = (req,res, next) => {
+    if(req.session.isAdmin){
+        return next();
+    }
+    else{
+        return res.status(401).json({success: false, isAdmin: false, message: 'You arent an Admin'})
+    }
+
+}
+
 const isAuthenticated = (req, res, next) => {
     if(!req.session.userId){
         return res.status(401).json({success: false, message: "Unathorized, Please Log In"})
@@ -132,12 +144,13 @@ const isAuthenticated = (req, res, next) => {
         res.clearCookie("connection.sid");
         return res.status(401).json({success: false, message: "Your Session Term is Finish"});
     })
+        return;
     }
-    const sessionTime = 1000 * 60;
+    const sessionTime = 1000 * 60 * 10;
     req.session.cookie.maxAge = sessionTime;
     req.session.cookie.expires = new Date(Date.now() + sessionTime);
     return next();
-}
+}   
 
 
 app.get('/api/check-authenticated', isAuthenticated, async(req, res) => {
@@ -146,6 +159,26 @@ app.get('/api/check-authenticated', isAuthenticated, async(req, res) => {
     const response = await query(sql, [id]);
     const result = await response.rows[0];
     return res.status(200).json({isAuthenticated: true, success: true, body: result});
+})
+
+app.get('/api/isAdmin', isAuthenticated, isAdmin, (req, res) => {
+    return res.status(200).json({success: true, isAdmin: true});
+});
+
+app.get('/api/get-my-id', isAuthenticated, (req, res) =>{
+    return res.status(200).json({success: true, userId: req.session.userId});
+})
+
+app.get('/api/get-all-users', isAuthenticated, isAdmin, async(req, res) => {
+    const sql = "SELECT * FROM users";
+    try{
+        const result = await query(sql, []);
+        const response = await result.rows;
+        return res.status(200).json({success: true, users: response});
+    } catch (error) {
+        console.log("Error fetching users: ", error);
+        return res.status(500).json({success: false, message: error.message});
+    }
 })
 
 app.listen(PORT, () => {

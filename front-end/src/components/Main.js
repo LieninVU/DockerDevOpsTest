@@ -6,6 +6,7 @@ import { useAuth } from "../AuthContext"
 
 const Main = ({SERVER}) => {
     const navigate = useNavigate()
+    const [userId, setUserId] = useState(null);
     const [data, setData] = useState('null');
     const {isAuthenticated, checkContext} = useAuth();
     
@@ -19,6 +20,23 @@ const Main = ({SERVER}) => {
         }
         )
     }, [])
+
+    useEffect(() => {
+        const getId = async() => {
+            const response = await fetch(`${SERVER}/api/get-my-id`, {
+                method: "GET",
+                credentials: 'include'
+            }) 
+            const result = await response.json();
+            if(result.success){
+                setUserId(result.userId);
+            }
+            else{
+                console.log("You are not Authenticated");
+            }
+        }
+        getId();
+    }, [isAuthenticated])
 
     const handleNavigateToDate = () => {
         navigate("/form", {replace: true});
@@ -47,7 +65,8 @@ const Main = ({SERVER}) => {
 
     return(
         <div>
-            {data}
+            <a>{data}</a><br/>
+            <a>Your id is: {userId}</a><br/>
             {isAuthenticated ? 
                 (<button onClick={handleLogUot}>LogOut</button>)
             :

@@ -7,6 +7,7 @@ import Auth from "./components/Auth";
 import Register from "./components/Registration";
 import {AuthProvider, useAuth} from "./AuthContext";
 import Main from "./components/Main";
+import AdminPanel from "./components/AdminPanel";
 
 const App = ({SERVER}) => {
     return(
@@ -21,6 +22,9 @@ const App = ({SERVER}) => {
                     }/>
                     <Route path="/registration" element={
                         <Register/>
+                    }/>
+                    <Route path="/admin-panel" element={
+                        <AdminPanel/>   
                     }/>
                 </Routes> 
             </BrowserRouter>  
