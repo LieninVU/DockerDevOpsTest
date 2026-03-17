@@ -1,0 +1,13 @@
+.hidenButton {
+    display: none;
+}
+.panel{
+    display: table-row;   
+}
+
+.panel:hover .hidenButton{
+    display:flex;
+    position:relative;
+    left: 50%;
+    transform: translate(-50%);
+}

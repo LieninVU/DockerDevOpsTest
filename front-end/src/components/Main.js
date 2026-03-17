@@ -4,11 +4,13 @@ import {useState, useEffect} from "react";
 import { useAuth } from "../AuthContext"
 
 
+
+
 const Main = ({SERVER}) => {
     const navigate = useNavigate()
     const [userId, setUserId] = useState(null);
     const [data, setData] = useState('null');
-    const {isAuthenticated, checkContext} = useAuth();
+    const {isAuthenticated, checkContext, handleLogUot} = useAuth();
     
     useEffect(() => {
         checkContext();
@@ -18,49 +20,51 @@ const Main = ({SERVER}) => {
             console.log("Response data:", data)
             setData(data)
         }
-        )
-    }, [])
+    )
+}, [])
 
-    useEffect(() => {
-        const getId = async() => {
-            const response = await fetch(`${SERVER}/api/get-my-id`, {
-                method: "GET",
-                credentials: 'include'
-            }) 
-            const result = await response.json();
-            if(result.success){
-                setUserId(result.userId);
-            }
-            else{
-                console.log("You are not Authenticated");
-            }
+useEffect(() => {
+    const getId = async() => {
+        const response = await fetch(`${SERVER}/api/get-my-id`, {
+            method: "GET",
+            credentials: 'include'
+        }) 
+        const result = await response.json();
+        if(result.success){
+            setUserId(result.userId);
         }
-        getId();
-    }, [isAuthenticated])
+        else{
+            console.log("You are not Authenticated");
+        }
+    }
+    getId();
+}, [isAuthenticated])
 
-    const handleNavigateToDate = () => {
-        navigate("/form", {replace: true});
-    };
-    const handleNavigateToRegistration = () => {
-        navigate("/registration")
-        checkContext();
-    }
-    const handleNavigateToAuthorization = () => {
-        navigate("/authorization")
-        checkContext();
-    }
-    const handleLogUot = async() => {
-        const response = await fetch(`${SERVER}/api/logout`, {
-            method: "POST",
+const handleNavigateToDate = () => {
+    navigate("/form", {replace: true});
+};
+const handleNavigateToRegistration = () => {
+    navigate("/registration")
+    checkContext();
+}
+const handleNavigateToAuthorization = () => {
+    navigate("/authorization")
+    checkContext();
+}
+
+const handleBanUser = async(userId) => {
+        const response = await fetch(`${SERVER}/api/delete-user/${userId}`, {
+            method: "DELETE",
             credentials: "include"
         });
-        if(!response.ok){const error = await response.text(); alert("Failed to LogOut: " + error); console.log("Failed to LogOut: " + error);}
+        if(!response.ok){const error = await response.text(); console.log("Failed to Delete the User: " + error)}
         else{
             const result = await response.json();
-            result.success ? console.log("You was LogOuted") : console.log("Unexpected Error");
+            if(result.success){console.log("You Deleted a User"); handleLogUot();}
         }
-        checkContext();
     }
+
+
 
 
     return(
@@ -68,7 +72,13 @@ const Main = ({SERVER}) => {
             <a>{data}</a><br/>
             <a>Your id is: {userId}</a><br/>
             {isAuthenticated ? 
-                (<button onClick={handleLogUot}>LogOut</button>)
+                (
+                    <>
+                    <button onClick={handleLogUot}>LogOut</button>
+                    <button onClick={() => handleBanUser(userId)}>Ban Yourself</button>
+                    </>
+
+                )
             :
                 (
                     <>
@@ -80,5 +90,6 @@ const Main = ({SERVER}) => {
         </div>
     )
 }
+
 
 export default Main;

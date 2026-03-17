@@ -2,6 +2,7 @@ import React from "react";
 import {useAuth} from '../AuthContext'
 import {useState, useEffect} from "react"
 
+
 const AdminPanel = () => {
     const SERVER = process.env.REACT_APP_SERVER || "http://localhost:2000";
     const [users, setUsers] = useState([]);
@@ -34,7 +35,18 @@ const AdminPanel = () => {
         }
     }
 
-
+    const handleBanUser = async(user) => {
+        const response = await fetch(`${SERVER}/api/delete-user/${user.id}`, {
+            method: "DELETE",
+            credentials: "include"
+        });
+        if(!response.ok){const error = await response.text(); console.log("Failed to Delete the User: " + error)}
+        else{
+            const result = await response.json();
+            if(result.success){console.log("You Deleted a User")}
+        }
+        setUsers(users.filter(item => item !== user))
+    }
 
 
     return(
@@ -61,7 +73,7 @@ const AdminPanel = () => {
                     </thead>
                     <tbody>
                         {users.map((user, index) => (
-                            <tr key={user.id || index}>
+                            <tr className="panel" key={user.id || index}>
                                 <td>{user.id}</td>
                                 <td>{user.first_name}</td>
                                 <td>{user.last_name}</td>
@@ -73,6 +85,7 @@ const AdminPanel = () => {
                                 <td>{user.is_active}</td>
                                 <td>{user.created_at}</td>
                                 <td>{user.updated_at}</td>
+                                <td><button className="hidenButton" onClick={() => handleBanUser(user)}>Ban User</button></td>
                             </tr>
                         ))}
                     </tbody>

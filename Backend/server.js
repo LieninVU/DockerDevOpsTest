@@ -181,6 +181,22 @@ app.get('/api/get-all-users', isAuthenticated, isAdmin, async(req, res) => {
     }
 })
 
+
+app.delete('/api/delete-user/:userId', isAuthenticated, async(req, res) => {
+    const userId = req.params.userId;
+    const sql = "DELETE from users WHERE id = $1";
+    if(req.session.isAdmin){
+        const response = await query(sql, [userId]);
+    }
+    else if (req.session.userId == userId){
+        const response = await query(sql, [userId]);
+    }
+    else{
+        return res.status(403).json({success: false, message: "You tried to Delete Another User"});
+    }
+    return res.status(200).json({success:true, message:"User was Deleted"});
+})
+
 app.listen(PORT, () => {
     console.log("Server is Running on PORT: " + PORT);
 })

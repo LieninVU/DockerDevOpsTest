@@ -20,13 +20,23 @@ function AuthProvider({children}){
         check();
     }, [])
 
+    const setDefault = () => {
+        setName("");
+        setSurname("");
+        setFatherName("");
+        setDate("");
+        setEmail("");
+        setAdmin(false);
+        setActive(false);
+        setAuthenticated(false); 
+    }
 
     async function checkContext(){
         const response = await fetch(`${SERVER}/api/check-authenticated`, {
             method: "GET",
             credentials: "include"
         })
-        if(!response.ok){const error = await response.text(); console.log("Failed to Get an Authenticated status: "+ error); setAuthenticated(false)}
+        if(!response.ok){const error = await response.text(); console.log("Failed to Get an Authenticated status: "+ error); setDefault();}
         else{
             const result = await response.json();
             if(result.success){
@@ -39,10 +49,23 @@ function AuthProvider({children}){
                 setActive(result.body.is_active);
                 setAuthenticated(true); 
             }
+            else{ setDefault(); }
         }
     }
+    const handleLogUot = async() => {
+    const response = await fetch(`${SERVER}/api/logout`, {
+        method: "POST",
+        credentials: "include"
+    });
+    if(!response.ok){const error = await response.text(); alert("Failed to LogOut: " + error); console.log("Failed to LogOut: " + error);}
+    else{
+        const result = await response.json();
+        result.success ? console.log("You was LogOuted") : console.log("Unexpected Error");
+    }
+    checkContext();
+}
     return(
-        <AuthContext.Provider value={{checkContext, isAuthenticated, setAuthenticated, name, setName, surname, setSurname, fatherName, setFatherName, date, setDate, email, setEmail, isAdmin, setAdmin, isActive, setActive}}>
+        <AuthContext.Provider value={{checkContext, isAuthenticated, setAuthenticated, name, setName, surname, setSurname, fatherName, setFatherName, date, setDate, email, setEmail, isAdmin, setAdmin, isActive, setActive, handleLogUot}}>
             {children}
         </AuthContext.Provider>
     )
