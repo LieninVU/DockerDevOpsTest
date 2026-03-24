@@ -15,19 +15,23 @@ function Auth (){
 
     const handleSumbit = async (e) =>{
         e.preventDefault();
-        const response = await fetch(`${SERVER}/api/auth`, {
-            method: "POST",
-            credentials: "include",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({email: email, password: password })
-        });
-        if (!response.ok){ const error = await response.text(); console.log(`We having a problem\nStats: ${response.status}\nError: ${error}`);}
-        else{
-            alert("Authorization successful");
-            console.log("Authorization successful");
-            await checkContext();
-            console.log("checkContext completed, navigating to /");
-            navigate("/");
+        try {
+            const response = await fetch(`${SERVER}/api/auth`, {
+                method: "POST",
+                credentials: "include",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({email: email, password: password })
+            });
+            if (!response.ok){ const error = await response.text(); console.log(`We having a problem\nStats: ${response.status}\nError: ${error}`);}
+            else{
+                alert("Authorization successful");
+                console.log("Authorization successful");
+                await checkContext();
+                console.log("checkContext completed, navigating to /");
+                navigate("/");
+            }
+        } catch (error) {
+            console.error("Auth fetch failed: " + error.message);
         }
     }
 

@@ -19,33 +19,41 @@ const AdminPanel = () => {
 
     
     const getAllUsers = async() => {
-        const response = await fetch(`${SERVER}/api/get-all-users`, {
-            method: "GET",
-            credentials: "include"
-        });
-        if(!response.ok){const error = await response.text(); console.log("Failed to Get an Users status: "+ error);}
-        else{   
-            const result = await response.json();
-            console.log(result);
-            const usr = result.users;
-            console.log(usr);
-            if(result.success){ setUsers(usr);} 
-            else{ console.log("Something Went Wrong"); setUsers([]);}
-            console.log(users);
+        try {
+            const response = await fetch(`${SERVER}/api/get-all-users`, {
+                method: "GET",
+                credentials: "include"
+            });
+            if(!response.ok){const error = await response.text(); console.log("Failed to Get an Users status: "+ error);}
+            else{
+                const result = await response.json();
+                console.log(result);
+                const usr = result.users;
+                console.log(usr);
+                if(result.success){ setUsers(usr);}
+                else{ console.log("Something Went Wrong"); setUsers([]);}
+                console.log(users);
+            }
+        } catch (error) {
+            console.error("getAllUsers fetch failed: " + error.message);
         }
     }
 
     const handleBanUser = async(user) => {
-        const response = await fetch(`${SERVER}/api/delete-user/${user.id}`, {
-            method: "DELETE",
-            credentials: "include"
-        });
-        if(!response.ok){const error = await response.text(); console.log("Failed to Delete the User: " + error)}
-        else{
-            const result = await response.json();
-            if(result.success){console.log("You Deleted a User")}
+        try {
+            const response = await fetch(`${SERVER}/api/delete-user/${user.id}`, {
+                method: "DELETE",
+                credentials: "include"
+            });
+            if(!response.ok){const error = await response.text(); console.log("Failed to Delete the User: " + error)}
+            else{
+                const result = await response.json();
+                if(result.success){console.log("You Deleted a User")}
+            }
+            setUsers(users.filter(item => item !== user))
+        } catch (error) {
+            console.error("handleBanUser fetch failed: " + error.message);
         }
-        setUsers(users.filter(item => item !== user))
     }
 
 

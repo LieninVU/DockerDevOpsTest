@@ -27,14 +27,18 @@ function Registration (){
     
     const handleSubmit = async (e) =>{
         e.preventDefault();
-        const response = await fetch(`${SERVER}/api/registration`,{
-            method: "POST",
-            credentials: "include",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({name: name, surname: surname, fathername: fatherName, date: date, email: email, password: password})
-        })
-        if(!response.ok){ console.log(`We having a problem\nStats: ${response.status}\nError: ${response.text()}`); alert("Error, you Dont Registrate Account");}
-        else{ alert("Registration successful"); console.log("Registration successful"); await checkContext(); navigate("/");}
+        try {
+            const response = await fetch(`${SERVER}/api/registration`,{
+                method: "POST",
+                credentials: "include",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({name: name, surname: surname, fathername: fatherName, date: date, email: email, password: password})
+            })
+            if(!response.ok){ console.log(`We having a problem\nStats: ${response.status}\nError: ${response.text()}`); alert("Error, you Dont Registrate Account");}
+            else{ alert("Registration successful"); console.log("Registration successful"); await checkContext(); navigate("/");}
+        } catch (error) {
+            console.error("Registration fetch failed: " + error.message);
+        }
     }
 
 

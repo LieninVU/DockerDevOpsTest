@@ -14,27 +14,33 @@ const Main = ({SERVER}) => {
     
     useEffect(() => {
         checkContext();
-        fetch(`${SERVER}/`, { credentials: "include"}).then(
-            res => res.text()
-        ).then(data => {
-            console.log("Response data:", data)
-            setData(data)
-        }
-    )
-}, [])
+        fetch(`${SERVER}/`, { credentials: "include"})
+            .then(res => res.text())
+            .then(data => {
+                console.log("Response data:", data)
+                setData(data)
+            })
+            .catch(error => {
+                console.error("Main fetch (/) failed: " + error.message);
+            });
+    }, [])
 
 useEffect(() => {
     const getId = async() => {
-        const response = await fetch(`${SERVER}/api/get-my-id`, {
-            method: "GET",
-            credentials: 'include'
-        }) 
-        const result = await response.json();
-        if(result.success){
-            setUserId(result.userId);
-        }
-        else{
-            console.log("You are not Authenticated");
+        try {
+            const response = await fetch(`${SERVER}/api/get-my-id`, {
+                method: "GET",
+                credentials: 'include'
+            })
+            const result = await response.json();
+            if(result.success){
+                setUserId(result.userId);
+            }
+            else{
+                console.log("You are not Authenticated");
+            }
+        } catch (error) {
+            console.error("getId fetch failed: " + error.message);
         }
     }
     getId();
@@ -53,6 +59,7 @@ const handleNavigateToAuthorization = () => {
 }
 
 const handleBanUser = async(userId) => {
+    try {
         const response = await fetch(`${SERVER}/api/delete-user/${userId}`, {
             method: "DELETE",
             credentials: "include"
@@ -62,7 +69,10 @@ const handleBanUser = async(userId) => {
             const result = await response.json();
             if(result.success){console.log("You Deleted a User"); handleLogUot();}
         }
+    } catch (error) {
+        console.error("handleBanUser fetch failed: " + error.message);
     }
+}
 
 
 
