@@ -39,3 +39,13 @@ Thumbs.db
 *.pid
 *.seed
 *.pid.lock
+
+# Docker volumes (database data)
+Database/postgres_data/
+
+# Docker logs
+*.log
+
+# Compiled files
+*.pyc
+*.so
